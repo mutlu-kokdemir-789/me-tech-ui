@@ -19,7 +19,9 @@ export class AuthenticationService {
 
   constructor(
     private httpClient: HttpClient
-  ) { }
+  ) {
+    this.userLoggedIn = this.getUser();
+  }
 
   public signup(user: User): void {
     this.signupRequest(user).subscribe({

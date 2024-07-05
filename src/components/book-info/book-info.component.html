@@ -35,8 +35,9 @@
     <div class="tab-pane fade show active mt-3" id="nav-comment-list" role="tabpanel"
       aria-labelledby="nav-comment-list-tab" tabindex="0">
       <!-- comment list tab content -->
-      @for (comment of comments; track comment) {
-      <p>{{comment}}</p>
+      @for (comment of commentResponseForBookDetails; track comment.id) {
+      <p style="font-weight: bold;">{{comment.userName + ' : '}}</p>
+      <p>{{comment.message}}</p>
       }
     </div>
 

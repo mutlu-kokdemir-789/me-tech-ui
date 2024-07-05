@@ -6,6 +6,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { FormGroup, FormControl, FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { User } from '../../data/user';
+import { BookDetailsResponse } from '../../data/bookDetailsResponse';
+import { CommentResponseForBookDetails } from '../../data/commentResponseForBookDetails';
 
 
 
@@ -20,10 +22,7 @@ import { User } from '../../data/user';
   styleUrl: './book-info.component.css'
 })
 export class BookInfoComponent implements OnInit, OnDestroy {
-  public comments: string [] = [
-    'iyi',
-    'fena degil'
-  ];
+  public commentResponseForBookDetails?: CommentResponseForBookDetails[];
 
   public commentAndRateForm!: FormGroup;
   public bookId?: string;
@@ -46,7 +45,7 @@ export class BookInfoComponent implements OnInit, OnDestroy {
       takeUntil(this.componentDestroyed$)
     ).subscribe({
       next: (user) => {
-        this.user = user ? {...user} : undefined;
+        this.user = user;
       }
     });
     this.commentAndRateForm = this.formBuilder.group({
@@ -70,8 +69,9 @@ export class BookInfoComponent implements OnInit, OnDestroy {
           this.bookId = params['id'];
           if (this.bookId){
             this.booksService.getBookDetails(this.bookId).subscribe({
-              next: (book?: Book) => {
-                this.book = book;
+              next: (bookDetailsResponse: BookDetailsResponse) => {
+                this.book = bookDetailsResponse.book;
+                this.commentResponseForBookDetails = bookDetailsResponse.comments;
               }
             })
           }

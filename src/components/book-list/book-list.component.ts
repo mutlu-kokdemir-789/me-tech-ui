@@ -4,6 +4,7 @@ import { BooksService } from '../../services/books.service';
 import { Book } from '../../data/book';
 import { Subject, catchError, concat, finalize, last, takeUntil } from 'rxjs';
 import { QueryParamsForBookListRequest } from '../../data/queryParams';
+import { BookListResponse } from '../../data/bookListResponse';
 
 @Component({
     selector: 'app-book-list',
@@ -28,11 +29,12 @@ export class BookListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.booksService.getBooks()
+    this.booksService.getBooksWithQuery({} as QueryParamsForBookListRequest)
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe({
-        next: (books: Book[]) => {
-          this.books = books;
+        next: (bookListResponse: BookListResponse) => {
+          this.books = bookListResponse.books;
+
         },
         error: (err) => {
           console.error(err);
@@ -45,8 +47,8 @@ export class BookListComponent implements OnInit, OnDestroy {
       this.booksService.removeBook(bookId),
       this.booksService.getBooksWithQuery({} as QueryParamsForBookListRequest)
     ).pipe(last()).subscribe({
-      next: (books) => {
-
+      next: (bookListResponse) => {
+        this.books = bookListResponse?.books;
       },
       error: (err) => {
         console.error(err);

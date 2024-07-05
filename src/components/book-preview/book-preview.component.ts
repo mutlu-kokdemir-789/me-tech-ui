@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Book } from '../../data/book';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
+import { Subject, takeUntil } from 'rxjs';
+import { User } from '../../data/user';
 
 @Component({
   selector: 'app-book-preview',
@@ -10,20 +12,36 @@ import { AuthenticationService } from '../../services/authentication.service';
   templateUrl: './book-preview.component.html',
   styleUrl: './book-preview.component.css'
 })
-export class BookPreviewComponent {
+export class BookPreviewComponent implements OnDestroy {
 
   @Input() book?: Book;
 
   @Output() removeBookClick: EventEmitter<string> = new EventEmitter();
 
-  public isAdmin = false;
+  public user?: User;
+  public componentDestroyed$ = new Subject<void>();
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private authenticationService: AuthenticationService
   ) {
-    this.isAdmin = this.authenticationService.getUser()?.role === 'Admin';
+    const user = this.authenticationService.getUser();
+    if (user) {
+      this.user = {...user};
+    }
+    this.authenticationService.userSubject.pipe(
+      takeUntil(this.componentDestroyed$)
+    ).subscribe({
+      next: (user) => {
+        this.user = user;
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.unsubscribe();
   }
 
   public clickedBook(): void {
