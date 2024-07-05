@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BookPreviewComponent } from "../book-preview/book-preview.component";
 import { BooksService } from '../../services/books.service';
 import { Book } from '../../data/book';
-import { Subject, catchError, concat, finalize, last, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { QueryParamsForBookListRequest } from '../../data/queryParams';
 import { BookListResponse } from '../../data/bookListResponse';
 
@@ -34,7 +34,6 @@ export class BookListComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (bookListResponse: BookListResponse) => {
           this.books = bookListResponse.books;
-
         },
         error: (err) => {
           console.error(err);
@@ -43,16 +42,18 @@ export class BookListComponent implements OnInit, OnDestroy {
   }
 
   public clickedRemoveBook(bookId: string): void {
-    concat(
-      this.booksService.removeBook(bookId),
-      this.booksService.getBooksWithQuery({} as QueryParamsForBookListRequest)
-    ).pipe(last()).subscribe({
-      next: (bookListResponse) => {
-        this.books = bookListResponse?.books;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
+    this.booksService.removeBook(bookId).pipe(takeUntil(this.componentDestroyed$))
+      .subscribe({
+        next: () => {
+          this.booksService.getBooksWithQuery({} as QueryParamsForBookListRequest).pipe(takeUntil(this.componentDestroyed$))
+            .subscribe({
+              next: (bookListResponse: BookListResponse) => {
+                this.books = bookListResponse?.books;
+              },
+              error: (err) => {console.error(err)}
+            })
+        },
+        error: (err) => {console.error(err)}
+      });
   }
 }

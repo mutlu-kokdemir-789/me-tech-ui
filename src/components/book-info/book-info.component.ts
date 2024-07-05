@@ -8,6 +8,8 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { User } from '../../data/user';
 import { BookDetailsResponse } from '../../data/bookDetailsResponse';
 import { CommentResponseForBookDetails } from '../../data/commentResponseForBookDetails';
+import { CommentAndRateRequestData } from '../../data/commentAndRateRequestData';
+import { BookUpdateRequest } from '../../data/bookUpdateRequest';
 
 
 
@@ -25,7 +27,8 @@ export class BookInfoComponent implements OnInit, OnDestroy {
   public commentResponseForBookDetails?: CommentResponseForBookDetails[];
 
   public commentAndRateForm!: FormGroup;
-  public bookId?: string;
+  public updateForm!: FormGroup;
+  public bookId!: string;
   public book?: Book;
   public user?: User;
 
@@ -49,10 +52,14 @@ export class BookInfoComponent implements OnInit, OnDestroy {
       }
     });
     this.commentAndRateForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      author: ['', Validators.required],
-      publishingYear: ['', Validators.required],
-      price: ['', Validators.required]
+      comment: [''],
+      rate: []
+    });
+    this.updateForm = this.formBuilder.group({
+      title: [''],
+      author: [''],
+      publishingYear: [],
+      price: []
     });
   }
 
@@ -72,10 +79,79 @@ export class BookInfoComponent implements OnInit, OnDestroy {
               next: (bookDetailsResponse: BookDetailsResponse) => {
                 this.book = bookDetailsResponse.book;
                 this.commentResponseForBookDetails = bookDetailsResponse.comments;
-              }
+              },
+              error: (err) => {console.error(err)}
             })
           }
-        }
+        },
+        error: (err) => {console.error(err)}
       });
+  }
+
+  public clickedSubmitCommentAndRate(event: SubmitEvent): void {
+    event.preventDefault();
+    if (this.commentAndRateForm.value['comment']) {
+      const req = {
+        bookId: this.bookId,
+        userId: this.user?.id,
+        comment: this.commentAndRateForm.value['comment']
+      } as CommentAndRateRequestData;
+      if (!isNaN(Number(this.commentAndRateForm.value['rate']))) {
+        req.rate = Number(this.commentAndRateForm.value['rate']);
+      }
+      this.booksService.commentAndRate(req).pipe(takeUntil(this.componentDestroyed$))
+        .subscribe({
+          next: () => {
+            this.booksService.getBookDetails(this.bookId).pipe(takeUntil(this.componentDestroyed$))
+              .subscribe({
+                next: (bookDetailsResponse: BookDetailsResponse) => {
+                  this.book = bookDetailsResponse.book;
+                  this.commentResponseForBookDetails = bookDetailsResponse.comments;
+                },
+                error: (err) => {console.error(err)}
+              })
+          },
+          error: (err) => {console.error(err)}
+        });
+    }
+  }
+
+  public clickedSubmitUpdate(event: SubmitEvent): void {
+    event.preventDefault();
+    const abc = event;
+    const currentTarget = (event as any).currentTarget;
+    if (
+      this.updateForm.value['title'] ||
+      this.updateForm.value['author'] ||
+      !isNaN(Number(this.updateForm.value['publishingYear'])) ||
+      !isNaN(Number(this.updateForm.value['price']))
+      ) {
+        const title = this.updateForm.value['title'];
+        const author = this.updateForm.value['author'];
+        const publishNum = Number(this.updateForm.value['publishingYear']);
+        const priceNum = Number(this.updateForm.value['price']);
+        const publishingYear = !isNaN(publishNum) ? publishNum !== 0 ? publishNum : undefined : undefined;
+        const price = !isNaN(priceNum) ? priceNum !== 0 ? priceNum : undefined : undefined;
+      const bookReq = {
+        id: this.bookId,
+        title: title ? title : undefined,
+        author: author ? author : undefined,
+        publishingYear: publishingYear,
+        price: price
+      } as BookUpdateRequest;
+
+      this.booksService.updateBook(bookReq).pipe(takeUntil(this.componentDestroyed$)).subscribe({
+        next: () => {
+          this.booksService.getBookDetails(this.bookId).pipe(takeUntil(this.componentDestroyed$)).subscribe({
+            next: (bookDetailsResponse: BookDetailsResponse) => {
+              this.book = bookDetailsResponse.book;
+              this.commentResponseForBookDetails = bookDetailsResponse.comments;
+            },
+            error: (err) => {console.error(err)}
+          })
+        },
+        error: (err) => {console.error(err)}
+      })
+    }
   }
 }

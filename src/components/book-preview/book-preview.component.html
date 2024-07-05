@@ -5,7 +5,7 @@
   <div class="ms-3">
     <p style="font-weight: bold;">{{book?.title}}</p>
     <p>{{book?.author}}</p>
-    <p>{{book?.price}} TL</p>
+    <p>{{book?.price}} USD</p>
     <p>{{book?.rate ? book?.rate + ' of 5' : 'None rated'}}</p>
     @if (user?.role === 'Admin') {
     <p><i class="bi bi-trash my-hover-cursor" (click)="clickedRemoveBook()"></i></p>
