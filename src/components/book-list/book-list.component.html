@@ -9,18 +9,18 @@
           data-bs-auto-close="outside">
           Filter
         </button>
-        <form class="dropdown-menu p-4">
+        <form class="dropdown-menu p-4" [formGroup]="filterForm" (submit)="clickedSubmitFilterApply($event)">
           <div class="mb-3 ">
             <div>
               <label class="form-label">Price</label>
             </div>
             <div>
               <i>Min: </i>
-              <input type="text" class="form-control" id="minPrice">
+              <input type="text" class="form-control" id="minPrice" formControlName="priceMin">
             </div>
             <div>
               <i>Max: </i>
-              <input type="text" class="form-control" id="maxPrice">
+              <input type="text" class="form-control" id="maxPrice" formControlName="priceMax">
             </div>
           </div>
           <div class="mb-3 ">
@@ -29,11 +29,11 @@
             </div>
             <div>
               <i>Min: </i>
-              <input type="text" class="form-control" id="minRate">
+              <input type="text" class="form-control" id="minRate" formControlName="rateMin">
             </div>
             <div>
               <i>Max: </i>
-              <input type="text" class="form-control" id="maxRate">
+              <input type="text" class="form-control" id="maxRate" formControlName="rateMax">
             </div>
           </div>
           <button type="submit" class="btn btn-primary">Apply</button>
@@ -46,16 +46,20 @@
           Sort
         </button>
         <ul class="dropdown-menu dropdown-menu-start">
-          <li class="my-hover-cursor"><i class="dropdown-item">Price - Asc <i class="bi bi-arrow-up-circle"></i></i>
+          <li class="my-hover-cursor" (click)="sortPriceAsc()"><i class="dropdown-item">Price - Asc <i
+                class="bi bi-arrow-up-circle"></i></i>
           </li>
-          <li class="my-hover-cursor"><i class="dropdown-item">Price - Desc <i class="bi bi-arrow-down-circle"></i></i>
+          <li class="my-hover-cursor" (click)="sortPriceDesc()"><i class="dropdown-item">Price - Desc <i
+                class="bi bi-arrow-down-circle"></i></i>
           </li>
-          <li class="my-hover-cursor"><i class="dropdown-item">Publishing Year - Asc <i
+          <li class="my-hover-cursor" (click)="sortPubAsc()"><i class="dropdown-item">Publishing Year - Asc <i
                 class="bi bi-arrow-up-circle"></i></i></li>
-          <li class="my-hover-cursor"><i class="dropdown-item">Publishing Year - Desc <i
+          <li class="my-hover-cursor" (click)="sortPubDesc()"><i class="dropdown-item">Publishing Year - Desc <i
                 class="bi bi-arrow-down-circle"></i></i></li>
-          <li class="my-hover-cursor"><i class="dropdown-item">Rate - Asc <i class="bi bi-arrow-up-circle"></i></i></li>
-          <li class="my-hover-cursor"><i class="dropdown-item">Rate - Desc <i class="bi bi-arrow-down-circle"></i></i>
+          <li class="my-hover-cursor" (click)="sortRateAsc()"><i class="dropdown-item">Rate - Asc <i
+                class="bi bi-arrow-up-circle"></i></i></li>
+          <li class="my-hover-cursor" (click)="sortRateDesc()"><i class="dropdown-item">Rate - Desc <i
+                class="bi bi-arrow-down-circle"></i></i>
           </li>
         </ul>
       </div>
