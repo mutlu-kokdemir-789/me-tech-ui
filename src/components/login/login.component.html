@@ -1,0 +1,87 @@
+<h3 class="text-center">Login/Signup</h3>
+<div class="d-flex justify-content-center">
+  <div>
+    <nav>
+      <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
+        <button class="nav-link active d-inline-block" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+          type="button" role="tab" aria-controls="nav-home" aria-selected="true">Login</button>
+        <button class="nav-link d-inline-block" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+          type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Signup</button>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+        <!-- login tab content -->
+        <form novalidate (submit)="submittedForLogin($event)" [formGroup]="loginForm">
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" name="email1" aria-describedby="emailHelp"
+              [(ngModel)]="email" formControlName="email1" required>
+            <div class="invalid-feedback">
+              Please provide an email.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" [(ngModel)]="password" formControlName="password1" class="form-control"
+              id="exampleInputPassword1" name="password1" required>
+            <div class="invalid-feedback">
+              Please provide a password.
+            </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary d-inline-block">Submit</button>
+          </div>
+        </form>
+      </div>
+      <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+        <!-- signup tab content -->
+        <form novalidate (submit)="submittedForSignup($event)" [formGroup]="signupForm">
+          <div class="mb-3">
+            <label for="validationTooltip01" class="form-label">User Name</label>
+            <input type="text" [(ngModel)]="user.name" formControlName="name2" class="form-control"
+              id="validationTooltip01" name="name2" required>
+            <div class="invalid-feedback">
+              Please provide a name.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail2" class="form-label">Email Address</label>
+            <input type="email" [(ngModel)]="user.email" formControlName="email2" class="form-control"
+              id="exampleInputEmail2" name="email2" aria-describedby="emailHelp" required>
+            <div class="invalid-feedback">
+              Please provide an email.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword2" class="form-label">Password</label>
+            <input type="password" [(ngModel)]="user.password" formControlName="password2" class="form-control"
+              id="exampleInputPassword2" name="password2" required>
+            <div class="invalid-feedback">
+              Please provide a password.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="roleInput" class="form-label">Role</label>
+            <select class="form-select mb-3" id="roleInput" [(ngModel)]="user.role" formControlName="role2" name="role2"
+              aria-label="Default select example" required>
+              <option value="Admin">Admin</option>
+              <option value="User">User</option>
+            </select>
+          </div>
+          <div class="invalid-feedback">
+            Please provide a role.
+          </div>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary d-inline-block">Submit</button>
+          </div>
+        </form>
+        <div #alertDiv class="alert alert-success d-flex align-items-center m-2 d-none" role="alert">
+          <div>
+            You signed up successfully
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

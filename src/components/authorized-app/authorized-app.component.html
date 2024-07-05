@@ -3,17 +3,14 @@
     <a class="navbar-brand" routerLink="book-list">OBS APP</a>
 
     <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav me-auto ms-3">
-        <li class="nav-item {{user?.role !== 'Admin' ? 'd-none' : ''}}">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item {{!isAdmin ? 'd-none' : ''}}">
           <a class="nav-link" routerLink="add-book">Add Book</a>
         </li>
       </ul>
 
-      @if (user?.id) {
-      <i>{{user?.name}}</i>
-      }
 
-      <div class="dropdown ms-3">
+      <div class="dropdown">
         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square"
             viewBox="0 0 16 16">
@@ -23,14 +20,13 @@
           </svg>
         </button>
         <ul class="dropdown-menu  dropdown-menu-end">
-          <li (click)="clicekdLoginLogout()"><button class="dropdown-item" type="button">{{!user?.id ? 'Login' :
-              'Logout'}}</button></li>
+          <li><i class="dropdown-item" type="button">User Name</i></li>
+          <li><button class="dropdown-item" type="button">Log Out</button></li>
         </ul>
       </div>
     </div>
   </div>
 </nav>
-
 <div class="center-content">
   <router-outlet />
 </div>

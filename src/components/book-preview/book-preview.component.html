@@ -1,0 +1,14 @@
+<div class="d-flex flex-column flex-md-row justify-content-start">
+  <div>
+    <img src="assets/image-the-book-2.jpeg" class="rounded my-hover-cursor" alt="..." (click)="clickedBook()">
+  </div>
+  <div class="ms-3">
+    <p>{{book?.title}}</p>
+    <p>{{book?.author}}</p>
+    <p>{{book?.price}}</p>
+    <p>{{book?.rate}} of 5</p>
+    @if (isAdmin) {
+    <p><i class="bi bi-trash my-hover-cursor" (click)="clickedRemoveBook()"></i></p>
+    }
+  </div>
+</div>
