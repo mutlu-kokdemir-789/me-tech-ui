@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Book } from '../data/book';
-import books from '../data/temp-data/books';
 import { Observable, of } from 'rxjs';
 import { QueryParamsForBookListRequest } from '../data/queryParams';
 import { HttpClient } from '@angular/common/http';
@@ -22,10 +21,6 @@ export class BooksService {
     private httpClient: HttpClient,
     private authService: AuthenticationService
   ) { }
-
-  public getBooks(): Observable<Book[]> {
-    return of(books);
-  }
 
   public getBooksWithQuery(
     queryParams: QueryParamsForBookListRequest
